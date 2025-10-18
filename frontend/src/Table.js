@@ -1,17 +1,22 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {
     useReactTable,
     getCoreRowModel,
     getSortedRowModel,
     getFilteredRowModel,
+    getPaginationRowModel,
     flexRender,
 } from '@tanstack/react-table';
 import './table.css';
+import './pagination.css';
 
 const MainTable = () => {
     const [users, setUsers] = useState([]);
     const [sorting, setSorting] = useState([]);
-    const [globalFilter, setGlobalFilter] = useState('');
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 3,
+    });
 
     useEffect(() => {
         fetchUsers();
@@ -21,35 +26,80 @@ const MainTable = () => {
         const data = [
             {
                 id: 1,
-                name: "John Smith",
-                email: "john.smith@gmail.com",
-                createdAt: "2024-01-15T10:30:00.000Z"
+                name: "Moscow",
+                coordinates: "55.7558° N, 37.6173° E",
+                creationDate: "1147-04-04T00:00:00.000Z",
+                area: 2561,
+                population: 12655050,
+                establishmentDate: "1147",
+                capital: true,
+                metersAboveSeaLevel: 156,
+                populationDensity: 4942,
+                telephoneCode: "+7-495",
+                climate: "Humid continental",
+                governor: "Sergey Sobyanin"
             },
             {
                 id: 2,
-                name: "Jane Johnson",
-                email: "jane.johnson@company.com",
-                createdAt: "2024-02-20T14:45:00.000Z"
+                name: "Saint Petersburg",
+                coordinates: "59.9343° N, 30.3351° E",
+                creationDate: "1703-05-27T00:00:00.000Z",
+                area: 1439,
+                population: 5384342,
+                establishmentDate: "1703",
+                capital: false,
+                metersAboveSeaLevel: 3,
+                populationDensity: 3833,
+                telephoneCode: "+7-812",
+                climate: "Humid continental",
+                governor: "Alexander Beglov"
             },
             {
                 id: 3,
-                name: "Alex Brown",
-                email: "alex.brown@yahoo.com",
-                createdAt: "2024-03-10T09:15:00.000Z"
+                name: "Novosibirsk",
+                coordinates: "55.0084° N, 82.9357° E",
+                creationDate: "1893-04-30T00:00:00.000Z",
+                area: 505,
+                population: 1625631,
+                establishmentDate: "1893",
+                capital: false,
+                metersAboveSeaLevel: 177,
+                populationDensity: 3219,
+                telephoneCode: "+7-383",
+                climate: "Humid continental",
+                governor: "Anatoly Lokot"
             },
             {
                 id: 4,
-                name: "Sarah Davis",
-                email: "sarah.davis@outlook.com",
-                createdAt: "2024-01-05T16:20:00.000Z"
+                name: "Yekaterinburg",
+                coordinates: "56.8389° N, 60.6057° E",
+                creationDate: "1723-11-18T00:00:00.000Z",
+                area: 495,
+                population: 1493749,
+                establishmentDate: "1723",
+                capital: false,
+                metersAboveSeaLevel: 237,
+                populationDensity: 3018,
+                telephoneCode: "+7-343",
+                climate: "Humid continental",
+                governor: "Alexey Orlov"
             },
             {
                 id: 5,
-                name: "Mike Wilson",
-                email: "mike.wilson@enterprise.org",
-                createdAt: "2024-04-01T11:00:00.000Z"
-            }
-        ];
+                name: "Kazan",
+                coordinates: "55.8304° N, 49.0661° E",
+                creationDate: "1005-05-30T00:00:00.000Z",
+                area: 425,
+                population: 1257391,
+                establishmentDate: "1005",
+                capital: false,
+                metersAboveSeaLevel: 60,
+                populationDensity: 2959,
+                telephoneCode: "+7-843",
+                climate: "Humid continental",
+                governor: "Ilsur Metshin"
+            },
+        ]
         setUsers(data);
     };
 
@@ -65,18 +115,82 @@ const MainTable = () => {
                 header: 'Name',
                 cell: info => info.getValue(),
                 enableSorting: true,
+                enableColumnFilter: true
             },
             {
-                accessorKey: 'email',
-                header: 'Email',
+                accessorKey: 'coordinates',
+                header: 'Coordinates',
+                cell: info => info.getValue(),
+                enableSorting: true,
+                enableColumnFilter: false
+            },
+            {
+                accessorKey: 'creationDate',
+                header: 'Creation date',
+                cell: info => new Date(info.getValue()).toLocaleString(),
+                enableColumnFilter: false
+            },
+            {
+                accessorKey: 'area',
+                header: 'Area',
+                cell: info => info.getValue(),
+                enableSorting: true,
+                enableColumnFilter: false
+            },
+            {
+                accessorKey: 'population',
+                header: 'Population',
+                cell: info => info.getValue(),
+                enableSorting: true,
+                enableColumnFilter: false
+            },
+            {
+                accessorKey: 'establishmentDate',
+                header: 'Establishment Date',
+                cell: info => info.getValue(),
+                enableSorting: true,
+                enableColumnFilter: false
+            },
+            {
+                accessorKey: 'capital',
+                header: 'Capital',
+                cell: info => {if (info.getValue())return  "YES"; else return  "NO"},
+                enableSorting: true,
+            },
+            {
+                accessorKey: 'metersAboveSeaLevel',
+                header: 'Meters ASL',
                 cell: info => info.getValue(),
                 enableSorting: true,
             },
             {
-                accessorKey: 'createdAt',
-                header: 'Created At',
-                cell: info => new Date(info.getValue()).toLocaleString(),
+                accessorKey: 'populationDensity',
+                header: 'population density',
+                cell: info => info.getValue(),
+                enableSorting: true,
             },
+            {
+                accessorKey: 'telephoneCode',
+                header: 'Telephone code',
+                cell: info => info.getValue(),
+                enableSorting: true,
+            },
+            {
+                accessorKey: 'climate',
+                header: 'Climate',
+                cell: info => info.getValue(),
+                enableSorting: true,
+                enableColumnFilter: true
+            },
+            {
+                accessorKey: 'governor',
+                header: 'Governor',
+                cell: info => info.getValue(),
+                enableSorting: true,
+                enableColumnFilter: true
+            },
+
+
         ],
         []
     );
@@ -85,14 +199,15 @@ const MainTable = () => {
         data: users,
         columns,
         state: {
+            pagination,
             sorting,
-            globalFilter,
         },
+        onPaginationChange: setPagination,
         onSortingChange: setSorting,
-        onGlobalFilterChange: setGlobalFilter,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
     });
 
     return (
@@ -112,17 +227,18 @@ const MainTable = () => {
                                     header.getContext()
                                 )}
                                 <div className="column-filter">
-                                    <input
+                                    {header.column.columnDef.enableColumnFilter && <input
                                         type="text"
                                         placeholder={`Filter ${header.column.columnDef.header}`}
                                         value={header.column.getFilterValue()}
                                         onChange={e => header.column.setFilterValue(e.target.value)}
                                         className="filter-input"
-                                    />
-                                </div>
-                                <span>
-                                    <button onClick={header.column.getToggleSortingHandler()}></button>
+                                    />}
+                                    <span>
+                                    <button className="sort-button" onClick={header.column.getToggleSortingHandler()}>↕</button>
                                 </span>
+                                </div>
+
 
                             </th>
                         ))}
@@ -141,6 +257,50 @@ const MainTable = () => {
                 ))}
                 </tbody>
             </table>
+            {/*Пагинация*/}
+            <div>
+                <button className="vectors"
+                        onClick={() => table.setPageIndex(0)}
+                        disabled={!table.getCanPreviousPage()}
+                >
+                    {'<<'}
+                </button>
+                <button className="vectors"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                >
+                    {'<'}
+                </button>
+                <button className="vectors"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                >
+                    {'>'}
+                </button>
+                <button className="vectors"
+                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                        disabled={!table.getCanNextPage()}
+                >
+                    {'>>'}
+                </button>
+            </div>
+            <span className="page">
+                    Страница{' '}
+                {table.getState().pagination.pageIndex + 1} из {table.getPageCount()}
+            </span>
+
+            <select className="pagination-selector"
+                    value={table.getState().pagination.pageSize}
+                    onChange={e => {
+                        table.setPageSize(parseInt(e.target.value));
+                    }}
+            >
+                {[3, 5, 10].map(x => (
+                    <option key={x} value={x}>
+                        Показать {x}
+                    </option>
+                ))}
+            </select>
         </div>
     );
 };

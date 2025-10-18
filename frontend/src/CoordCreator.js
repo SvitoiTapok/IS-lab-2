@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useMemo} from 'react';
 import './humanCreator.css';
 import {
     flexRender,
@@ -98,10 +98,10 @@ const CoordCreator = () => {
                     }
                     }
                     className="name-input"/>
-                <button onClick={(e) => {
+                <button onClick={() => {
                     addCoord()
                 }}
-                        className="create-button">
+                        className="create-button-coord">
                     Добавить координаты
                 </button>
             </div>
@@ -120,6 +120,8 @@ const CoordCreator = () => {
                                     header.column.columnDef.header,
                                     header.getContext()
                                 )}
+                                <button className="sort-button" onClick={header.column.getToggleSortingHandler()}>↕
+                                </button>
                             </th>
                         ))}
                     </tr>

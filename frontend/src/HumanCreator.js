@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useMemo} from 'react';
 import './humanCreator.css';
 import {
     flexRender,
@@ -78,7 +78,7 @@ const HumanCreator = () => {
                         }
                     }}
                     className="name-input"/>
-                <button onClick={(e) => {
+                <button onClick={() => {
                     addHuman()
                 }}
                 className="create-button">
@@ -100,6 +100,8 @@ const HumanCreator = () => {
                                     header.column.columnDef.header,
                                     header.getContext()
                                 )}
+                                <button className="sort-button" onClick={header.column.getToggleSortingHandler()}>↕
+                                </button>
                             </th>
                         ))}
                     </tr>
