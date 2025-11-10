@@ -9,6 +9,7 @@ import {BrowserRouter, Link, NavLink, Route, Routes} from 'react-router-dom';
 import './util/navigation.css'
 import CityCreator from "./tables/CityCreator";
 import CityModificator from "./tables/CityModificator";
+import QueryManager from "./tables/QueryManager";
 //import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -41,6 +42,12 @@ root.render(
                 >
                     Add New City
                 </NavLink>
+                <NavLink
+                    to="/query"
+                    className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}
+                >
+                    Query
+                </NavLink>
             </nav>
             <Routes>
                 <Route path="/" element={<MainTable />} />
@@ -48,6 +55,7 @@ root.render(
                 <Route path="/coord" element={<CoordCreator />} />
                 <Route path="/city" element={<CityCreator />} />
                 <Route path="/edit-city" element={<CityModificator />} />
+                <Route path="/query" element={<QueryManager/>}/>
             </Routes>
         </BrowserRouter>
     </React.StrictMode>

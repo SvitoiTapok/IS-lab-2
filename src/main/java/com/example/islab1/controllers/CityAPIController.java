@@ -27,6 +27,8 @@ import java.util.List;
 public class CityAPIController {
     @Autowired
     private CitiesRepository citiesRepository;
+    @DeleteMapping
+
 
 
     @GetMapping("/getCities")

@@ -269,7 +269,7 @@ const CityCreator = () => {
         setMetersAbove('');
         setTelephoneCode('');
         setClimate(climats[0]);
-        setPopulationDensity('');
+        setPopulationDensity('')
         setClassErr("notification")
         showError("Объект успешно добавлен")
         await wait(3000).then(()=>        setClassErr("error"))
