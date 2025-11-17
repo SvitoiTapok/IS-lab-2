@@ -52,7 +52,6 @@ const CityModificator = () => {
                     humanService.getHumans(0, 10000000, 'id', 'asc')
                 ]);
 
-                // Устанавливаем массивы
                 setCoordinates(coordsData.content);
                 setHumans(humansData.content);
 

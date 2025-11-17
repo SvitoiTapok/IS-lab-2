@@ -25,7 +25,7 @@ public class HumanAPIController {
     private CitiesRepository cityRepository;
 
     @GetMapping("/getHumans")
-    public ResponseEntity<Page<Human>> getHumans(
+    public ResponseEntity<?> getHumans(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -38,16 +38,16 @@ public class HumanAPIController {
             Page<Human> humans = humanRepository.findAll(pageable);
             return ResponseEntity.ok(humans);
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
     @PostMapping("/addHuman")
-    public ResponseEntity<Human> addHuman(@RequestBody Human human) {
+    public ResponseEntity<?> addHuman(@RequestBody Human human) {
         try {
             humanRepository.save(human);
         }catch (Exception e){
-            return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
         return ResponseEntity.ok(human);
     }

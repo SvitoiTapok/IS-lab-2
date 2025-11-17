@@ -29,7 +29,6 @@ public class CityAPIController {
     private CitiesRepository citiesRepository;
 
 
-
     @GetMapping("/getCities")
     public ResponseEntity<Page<City>> getCity(
             @RequestParam(defaultValue = "0") int page,
@@ -65,6 +64,7 @@ public class CityAPIController {
         }
         return ResponseEntity.ok(city);
     }
+
     @PatchMapping("/updateCity/{id}")
     public ResponseEntity<?> updateCity(
             @PathVariable Long id,
@@ -143,7 +143,7 @@ public class CityAPIController {
                     Climate climate = Climate.valueOf(climateFilter.toUpperCase());
                     predicates.add(criteriaBuilder.equal(root.get("climate"), climate));
                 } catch (IllegalArgumentException e) {
-                    // Игнорируем неверный climate
+                    System.out.println(e.getMessage());
                 }
             }
 

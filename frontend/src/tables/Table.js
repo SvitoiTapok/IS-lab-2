@@ -241,8 +241,8 @@ const MainTable = () => {
     return (
         <div className="creator" id="city_creator">
             <span>Основная таблица</span>
-            <div>
-                <span className="">Отфильтровать по имени</span>
+            <div className="p-3">
+                <span>Отфильтровать по имени</span>
                 <input
                     placeholder="Фильтр по имени..."
                     value={nameFilter}
@@ -252,8 +252,8 @@ const MainTable = () => {
                     className="name-input"
                 />
             </div>
-            <div>
-                <span className="">Отфильтровать по климату</span>
+            <div className="p-3">
+                <span>Отфильтровать по климату</span>
                 <input
                     placeholder="Фильтр по климату..."
                     value={climateFilter}
@@ -263,8 +263,8 @@ const MainTable = () => {
                     className="name-input"
                 />
             </div>
-            <div>
-                <span className="">Отфильтровать по климату</span>
+            <div className="p-3">
+                <span>Отфильтровать по климату</span>
                 <input
                     placeholder="Фильтр по имени губернатора..."
                     value={humanFilter}
@@ -283,7 +283,6 @@ const MainTable = () => {
                                 key={header.id}
                                 className="text-left border"
                                 onClick={header.column.getToggleSortingHandler()}
-                                // onClick={header.column.getToggleSortingHandler()}
                             >
                                 {flexRender(
                                     header.column.columnDef.header,

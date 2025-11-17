@@ -48,11 +48,9 @@ const CityCreator = () => {
                     humanService.getHumans(0, 10000000, 'id', 'asc')
                 ]);
 
-                // Устанавливаем массивы
                 setCoordinates(coordsData.content);
                 setHumans(humansData.content);
 
-                // Только после этого устанавливаем значения по умолчанию
                 if (coordsData.content.length > 0) {
                     setCoordinate(coordsData.content[0]);
                 }
@@ -66,7 +64,10 @@ const CityCreator = () => {
         };
 
         initializeData();
-        const intervalId = setInterval(()=>{getAllCoords(); getAllHumans()}, 5000);
+        const intervalId = setInterval(() => {
+            getAllCoords();
+            getAllHumans()
+        }, 5000);
 
         return () => clearInterval(intervalId);
     }, []);

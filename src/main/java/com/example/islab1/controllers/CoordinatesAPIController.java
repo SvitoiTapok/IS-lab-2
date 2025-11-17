@@ -28,7 +28,7 @@ public class CoordinatesAPIController {
 
 
     @GetMapping("/getCoordinates")
-    public ResponseEntity<Page<Coordinates>> getCoordinates(
+    public ResponseEntity<?> getCoordinates(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -41,16 +41,16 @@ public class CoordinatesAPIController {
             Page<Coordinates> coordinates = coordinatesRepository.findAll(pageable);
             return ResponseEntity.ok(coordinates);
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
     @PostMapping("/addCoordinates")
-    public ResponseEntity<Coordinates> addCoordinates(@RequestBody Coordinates coordinates) {
+    public ResponseEntity<?> addCoordinates(@RequestBody Coordinates coordinates) {
         try {
             coordinatesRepository.save(coordinates);
         }catch (Exception e){
-            return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(400).body(e.getMessage());
         }
         return ResponseEntity.ok(coordinates);
     }
