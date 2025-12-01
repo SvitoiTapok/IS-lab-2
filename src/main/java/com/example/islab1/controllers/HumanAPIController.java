@@ -36,8 +36,6 @@ public class HumanAPIController {
                     : Sort.by(sortBy).ascending();
             Pageable pageable = PageRequest.of(page, size, sort);
             Page<Human> humans = humanRepository.findAll(pageable);
-            //test
-            Thread.sleep(1000);
             return ResponseEntity.ok(humans);
         } catch (Exception e) {
             return ResponseEntity.status(400).body("Некорректные данные");

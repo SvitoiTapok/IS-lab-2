@@ -10,12 +10,9 @@ import {
 } from '@tanstack/react-table';
 import './table.css';
 import '../util/pagination.css';
-import coordinatesService from "../services/CoordinatesService";
 import cityService from "../services/CityService";
-import cityCreator from "./CityCreator";
 import editIcon from '../imgs/edit-icon.png';
 import deleteIcon from '../imgs/delete-icon.png';
-import {wait} from "@testing-library/user-event/dist/utils";
 import {useError} from "../util/ErrorContext";
 
 const MainTable = () => {
@@ -35,6 +32,10 @@ const MainTable = () => {
     const [climateFilter, setClimateFilter] = useState('')
     const [humanFilter, setHumanFilter] = useState('')
     const {showError, showNotification} = useError();
+
+    //lab2
+    const [file, setFile] = useState(null)
+    const [uploading, setUploading] = useState(null)
 
 
     const coordsToString = (coord) => {
@@ -72,9 +73,9 @@ const MainTable = () => {
     }
     useEffect(() => {
         callServer()
-        const intervalId = setInterval(callServer, 5000)
-
-        return () => clearInterval(intervalId);
+        // const intervalId = setInterval(callServer, 5000)
+        //
+        // return () => clearInterval(intervalId);
     }, [pagination.pageIndex, pagination.pageSize, sorting, nameFilter, climateFilter, humanFilter]);
 
     const handleDelete = async (cityId) => {
@@ -237,6 +238,26 @@ const MainTable = () => {
         pageCount: data.totalPages || 0,
     });
 
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleUpload = async () => {
+        // if (!file) return;
+
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            cityService.importCity(formData).then(
+                showNotification((result) => showNotification(result.toString()))
+            ).catch((result) => showError(result.toString()))
+        } finally {
+            setUploading(false);
+        }
+    };
+
     return (
         <div className="creator" id="city_creator">
             <span>Основная таблица</span>
@@ -351,6 +372,16 @@ const MainTable = () => {
                     </option>
                 ))}
             </select>
+            <div>
+                <input
+                    type="file"
+                    accept=".json,.xml,.csv"
+                    onChange={handleFileChange}
+                />
+                <button onClick={handleUpload} disabled={uploading || !file} className={(uploading||!file)?"create-button-disabled":"create-button"}>
+                    {uploading ? 'Загрузка...' : 'Импортировать'}
+                </button>
+            </div>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16
-    container_name: islab1-postgres
+    container_name: islab2-postgres
     environment:
       POSTGRES_DB: myapp_db
       POSTGRES_USER: myapp_user
@@ -20,7 +20,7 @@ services:
 
   backend:
     build: .
-    container_name: islab1-backend
+    container_name: islab2-backend
     ports:
       - "8080:8080"
     environment:
@@ -37,7 +37,7 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: islab1-frontend
+    container_name: islab2-frontend
     ports:
       - "3000:3000"
     volumes:

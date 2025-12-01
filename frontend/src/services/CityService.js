@@ -64,7 +64,22 @@ const cityService = {
             console.error('Error updating city:', error);
             throw error;
         }
+    },
+
+    importCity: async (formData) => {
+        const response = await fetch('http://localhost:8080/api/importCity', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (response.ok) {
+            return await response.text();
+        } else {
+            throw new Error(await response.text())
+        }
+
     }
+
 
 };
 

@@ -58,4 +58,7 @@ public class City {
     @ManyToOne
     @JoinColumn(name = "human_id", nullable = false)
     private Human human; //Поле не может быть null
+
+
+
 }

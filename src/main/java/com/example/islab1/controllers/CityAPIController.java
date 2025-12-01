@@ -1,11 +1,10 @@
 package com.example.islab1.controllers;
 
+import com.example.islab1.Beans.ImportBean;
 import com.example.islab1.DBApi.CitiesRepository;
 import com.example.islab1.DBApi.CoordinatesRepository;
-import com.example.islab1.util.City;
-import com.example.islab1.util.Climate;
-import com.example.islab1.util.Coordinates;
-import com.example.islab1.util.Human;
+import com.example.islab1.DTO.DTOCity;
+import com.example.islab1.util.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -15,18 +14,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class CityAPIController {
-    @Autowired
-    private CitiesRepository citiesRepository;
+    private final CitiesRepository citiesRepository;
+
+    private final ImportBean importBean;
+
+    public CityAPIController(CitiesRepository citiesRepository, ImportBean importBean) {
+        this.citiesRepository = citiesRepository;
+        this.importBean = importBean;
+    }
 
 
     @GetMapping("/getCities")
@@ -62,7 +70,7 @@ public class CityAPIController {
             return ResponseEntity.status(400).body("Некорректные данные");
         }
         return ResponseEntity.ok(city);
-}
+    }
 
     @PatchMapping("/updateCity/{id}")
     public ResponseEntity<?> updateCity(
@@ -158,5 +166,14 @@ public class CityAPIController {
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    @PostMapping("/importCity")
+    public ResponseEntity<?> importCity(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("Файл пуст");
+        }
+        return importBean.importFile(file);
     }
 }

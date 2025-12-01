@@ -1,16 +1,11 @@
 package com.example.islab1.controllers;
 
 import com.example.islab1.util.City;
-import com.example.islab1.util.QueryBean;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import com.example.islab1.Beans.QueryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 
