@@ -1,6 +1,6 @@
 package com.example.islab1.controllers;
 
-import com.example.islab1.util.City;
+import com.example.islab1.Entities.City;
 import com.example.islab1.Beans.QueryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

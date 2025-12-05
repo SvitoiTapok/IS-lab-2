@@ -3,8 +3,9 @@ package com.example.islab1.Beans;
 import com.example.islab1.DBApi.CitiesRepository;
 import com.example.islab1.DBApi.CoordinatesRepository;
 import com.example.islab1.DBApi.HumanRepository;
+import com.example.islab1.DBApi.ImportResultRepository;
 import com.example.islab1.DTO.DTOCity;
-import com.example.islab1.util.City;
+import com.example.islab1.Entities.ImportResult;
 import com.example.islab1.util.Parser;
 import com.example.islab1.util.StringComparator;
 import jakarta.validation.ConstraintViolation;
@@ -27,13 +28,15 @@ public class ImportBean {
     private final CitiesRepository citiesRepository;
     private final CoordinatesRepository coordinatesRepository;
     private final HumanRepository humanRepository;
+    private final ImportResultRepository importResultRepository;
     private final Validator validator;
 
     @Autowired
-    public ImportBean(CitiesRepository citiesRepository, HumanRepository humanRepository, CoordinatesRepository coordinatesRepository) {
+    public ImportBean(CitiesRepository citiesRepository, HumanRepository humanRepository, CoordinatesRepository coordinatesRepository, ImportResultRepository importResultRepository) {
         this.citiesRepository = citiesRepository;
         this.humanRepository = humanRepository;
         this.coordinatesRepository = coordinatesRepository;
+        this.importResultRepository = importResultRepository;
         this.validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
@@ -47,12 +50,12 @@ public class ImportBean {
                     "application/json".equals(contentType)) {
                 objects = Parser.parseJsonFile(file);
 
-//            } else if (originalName.endsWith(".xml") ||
-//                    "application/xml".equals(contentType)) {
-//                cities = Parser.parseXmlFile(file);
-//            } else if (originalName.endsWith(".csv") ||
-//                    "text/csv".equals(contentType)) {
-//                cities = Parser.parseCsvFile(file);
+            } else if (originalName.endsWith(".xml") ||
+                    "application/xml".equals(contentType)) {
+                objects = Parser.parseXmlFile(file);
+            } else if (originalName.endsWith(".csv") ||
+                    "text/csv".equals(contentType)) {
+                objects = Parser.parseCsvFile(file);
             } else {
                 return ResponseEntity.badRequest()
                         .body("Неподдерживаемый формат файла");
@@ -64,31 +67,28 @@ public class ImportBean {
             return ResponseEntity.badRequest()
                     .body("Невозможно получить массив объектов");
         }
-        Parser.printListOfMaps(objects);
         try {
+            Parser.printListOfMaps(objects);
             List<DTOCity> cities = new ArrayList<>();
             String responseMessage = "";
             for (int i = 0; i < objects.size(); i++) {
-                System.out.println(i);
                 List<String> stringFieldNames = new ArrayList<>(List.of("name", "climate", "establishmentDate"));
                 List<String> boolFieldNames = new ArrayList<>(List.of("capital"));
                 List<String> numberFieldNames = new ArrayList<>(List.of("coordinatesID", "area", "population", "metersAboveSeaLevel", "telephoneCode", "humanID", "populationDensity"));
                 //если не совпадает количество аргументов - джиджис
-                if (objects.get(i).size() != 11)
-                    throw new Exception("Несоответствующее количество полей в записи номер " + (i + 1));
+                if (objects.get(i).size() != 11) return returnAndSave(HttpStatus.BAD_REQUEST, "Несоответствующее количество полей в записи номер " + (i + 1));
                 Map<String, Object> currentObj = objects.get(i);
 
                 DTOCity currentCity = new DTOCity();
                 for (String fieldName : currentObj.keySet()) {
-                    System.out.println(fieldName);
                     List<String> source;
                     if (currentObj.get(fieldName) instanceof Number) source = numberFieldNames;
                     else if (currentObj.get(fieldName) instanceof String) source = stringFieldNames;
                     else if (currentObj.get(fieldName) instanceof Boolean) source = boolFieldNames;
                     else
-                        throw new Exception("Неподдерживаемый формат значения поля " + fieldName + " в объекте под номером " + (i + 1));
+                        return returnAndSave(HttpStatus.BAD_REQUEST, "Неподдерживаемый формат значения поля " + fieldName + " в объекте под номером " + (i + 1));
                     if (source.isEmpty())
-                        throw new Exception("Несоответствующее количество полей определенного типа в объекте с номерном " + (i + 1));
+                        return returnAndSave(HttpStatus.BAD_REQUEST,"Несоответствующее количество полей определенного типа в объекте с номерном " + (i + 1));
                     double value = -1;
                     String mostSimilar = null;
                     for (String field : source) {
@@ -98,37 +98,49 @@ public class ImportBean {
                             mostSimilar = field;
                         }
                     }
-                    System.out.println(mostSimilar);
                     if (value < 0.7)
-                        throw new Exception("Не найдено совпадений для поля " + fieldName + "в объекте под номером " + (i + 1));
-                    currentCity.setFieldByName(mostSimilar, currentObj.get(fieldName));
-                    if (value != 1) {
-                        responseMessage = responseMessage + "В записи номер " + (i+1) + "название поля " + fieldName + "воспринято как " + mostSimilar + ".\n";
+                        return returnAndSave(HttpStatus.BAD_REQUEST,"Не найдено совпадений для поля " + fieldName + " в объекте под номером " + (i + 1));
+                    try {
+                        currentCity.setFieldByName(mostSimilar, currentObj.get(fieldName));
+                    } catch (IllegalArgumentException e) {
+                        return returnAndSave(HttpStatus.BAD_REQUEST,"Климат в объекте с номером " + (i+1) + " не предусмотрен системой");
                     }
-                    System.out.println(value);
+
+                    if (value != 1) {
+                        responseMessage = responseMessage + "В записи номер " + (i + 1) + " название поля " + fieldName + " воспринято как " + mostSimilar + ".\n";
+                    }
                     source.remove(mostSimilar);
-                    System.out.println("wrf");
                 }
                 Set<ConstraintViolation<DTOCity>> violations = validator.validate(currentCity);
                 if (!violations.isEmpty()) {
                     String errorMessage = violations.stream()
                             .map(v -> v.getPropertyPath() + ": " + v.getMessage())
                             .collect(Collectors.joining(", "));
-                    throw new IllegalArgumentException("Ошибка валидации: " + errorMessage);
+                    return returnAndSave(HttpStatus.BAD_REQUEST,"Ошибка валидации: " + errorMessage);
                 }
-                currentCity.setHuman(humanRepository.findById(currentCity.getHumanID()).orElseThrow(() -> new IllegalArgumentException("Город с ID " + currentCity.getHumanID() + " не найден")));
-                currentCity.setCoordinates(coordinatesRepository.findById(currentCity.getHumanID()).orElseThrow(() -> new IllegalArgumentException("Координаты с ID " + currentCity.getHumanID() + " не найден")));
+                try {
+                    int finalI = i;
+                    currentCity.setHuman(humanRepository.findById(currentCity.getHumanID()).orElseThrow(() -> new IllegalArgumentException("Город с ID " + currentCity.getHumanID() + " не найден(запись №"+(finalI +1)+")")));
+                    currentCity.setCoordinates(coordinatesRepository.findById(currentCity.getHumanID()).orElseThrow(() -> new IllegalArgumentException("Координаты с ID " + currentCity.getHumanID() + " не найден(запись №"+(finalI +1)+")")));
+                }catch (Exception e){
+                    return returnAndSave(HttpStatus.NOT_FOUND, e.getMessage());
+                }
                 cities.add(currentCity);
             }
-            Parser.printListOfMaps(objects);
             cities.stream().map(DTOCity::toCity).forEach(citiesRepository::save);
-            return ResponseEntity.ok("Успешно добавлено ");
-        } catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Климат не предусмотрен системой");
-        }
-        catch (Exception e) {
+            cities.stream().map(DTOCity::toCity).forEach(citiesRepository::save);
+            return returnAndSave(HttpStatus.OK, "Успешно добавлено " + cities.size() + " объектов" + ((responseMessage.isEmpty())?"":(". Список измененных полей: \n" + responseMessage)));
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Ошибка обработки файла: " + e.getMessage());
         }
+    }
+    private ResponseEntity<?> returnAndSave(HttpStatus status, String message) {
+        ImportResult result = new ImportResult();
+        result.setDescription(message);
+        result.setStatus(status.value());
+        importResultRepository.save(result);
+        if (status == HttpStatus.OK) return ResponseEntity.ok("Объекты успешно добавлены, см. историю добавления");
+        return ResponseEntity.status(status).body(message);
     }
 }

@@ -2,8 +2,8 @@ package com.example.islab1.controllers;
 
 import com.example.islab1.DBApi.CitiesRepository;
 import com.example.islab1.DBApi.HumanRepository;
-import com.example.islab1.util.City;
-import com.example.islab1.util.Human;
+import com.example.islab1.Entities.City;
+import com.example.islab1.Entities.Human;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +19,13 @@ import java.util.List;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class HumanAPIController {
-    @Autowired
-    private HumanRepository humanRepository;
-    @Autowired
-    private CitiesRepository cityRepository;
+    private final HumanRepository humanRepository;
+    private final CitiesRepository cityRepository;
+
+    public HumanAPIController(CitiesRepository cityRepository, HumanRepository humanRepository) {
+        this.cityRepository = cityRepository;
+        this.humanRepository = humanRepository;
+    }
 
     @GetMapping("/getHumans")
     public ResponseEntity<?> getHumans(

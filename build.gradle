@@ -47,6 +47,11 @@ dependencies {
     // Lombok (опционально)
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+
+    // Для CSV
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
 }
 
 test {

@@ -13,6 +13,7 @@ import {ErrorProvider} from "./util/ErrorContext";
 import HumanModificator from "./modificators/HumanModificator";
 import CoordsModificator from "./modificators/CoordsModificator";
 import TestComponent from "./util/TestComponent";
+import ImportResultStory from "./tables/ImportResultStory";
 //import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -57,6 +58,10 @@ root.render(
                     {/*>*/}
                     {/*    Test*/}
                     {/*</NavLink>*/}
+                    <NavLink to="/import"
+                             className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>
+                        ImportStory
+                    </NavLink>
                 </nav>
                 <Routes>
                     <Route path="/" element={<MainTable/>}/>
@@ -67,6 +72,7 @@ root.render(
                     <Route path="/edit-human" element={<HumanModificator/>}/>
                     <Route path="/edit-coord" element={<CoordsModificator/>}/>
                     <Route path="/query" element={<QueryManager/>}/>
+                    <Route path="/import" element={<ImportResultStory/>}/>
                     {/*под коммент*/}
                     {/*<Route path="/test" element={<TestComponent/>}/>*/}
                 </Routes>

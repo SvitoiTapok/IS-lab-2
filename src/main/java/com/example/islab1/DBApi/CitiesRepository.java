@@ -1,8 +1,8 @@
 package com.example.islab1.DBApi;
 
-import com.example.islab1.util.City;
-import com.example.islab1.util.Coordinates;
-import com.example.islab1.util.Human;
+import com.example.islab1.Entities.City;
+import com.example.islab1.Entities.Coordinates;
+import com.example.islab1.Entities.Human;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

@@ -1,7 +1,6 @@
-package com.example.islab1.util;
+package com.example.islab1.Entities;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -1,4 +1,4 @@
-package com.example.islab1.util;
+package com.example.islab1.Entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

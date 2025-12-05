@@ -1,11 +1,12 @@
 package com.example.islab1.DTO;
 
-import com.example.islab1.util.City;
-import com.example.islab1.util.Climate;
-import com.example.islab1.util.Coordinates;
-import com.example.islab1.util.Human;
+import com.example.islab1.Entities.City;
+import com.example.islab1.Entities.Climate;
+import com.example.islab1.Entities.Coordinates;
+import com.example.islab1.Entities.Human;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +29,7 @@ public class DTOCity {
 
     private java.time.LocalDateTime establishmentDate;
 
-    @NotBlank(message = "столица должна быть boolean")
+    @NotNull(message = "столица должна быть boolean")
     private Boolean capital; //Поле не может быть null
 
 
@@ -41,11 +42,12 @@ public class DTOCity {
     @Max(value = 100000, message = "Значение телефонного кода должно быть меньше 100000")
     private Integer telephoneCode; //Значение поля должно быть больше 0, Максимальное значение поля: 100000
 
-    @NotBlank(message = "climate должен быть не null")
+    @NotNull(message = "climate должен быть не null")
     private Climate climate; //Поле может быть null
 
-    @NotBlank(message = "human_id должен быть не null")
+    @Positive(message = "human_id должен быть больше нуля")
     private Integer humanID; //Поле не может быть null
+
     private Human human; //Поле не может быть null
     private Coordinates coordinates; //Поле не может быть null
 
@@ -99,6 +101,7 @@ public class DTOCity {
         city.setTelephoneCode(this.telephoneCode);
         city.setClimate(this.climate);
         city.setHuman(this.human);
+        city.setMetersAboveSeaLevel(this.metersAboveSeaLevel);
         return city;
     }
 }

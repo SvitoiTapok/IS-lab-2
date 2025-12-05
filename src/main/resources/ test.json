@@ -9,8 +9,8 @@
     "metersAboveSeaLevel": 156,
     "populationDensity": 4941,
     "telephoneCode": 495,
-    "climate": "CONTINENTAL",
-    "humanID": 1001
+    "climate": "RAIN_FOREST",
+    "humanID": 1
   },
   {
     "name": "Санкт-Петербург",
@@ -22,8 +22,8 @@
     "metersAboveSeaLevel": 3,
     "populationDensity": 3752,
     "telephoneCode": 812,
-    "climate": "TEMPERATE",
-    "humanID": 1002
+    "climate": "RAIN_FOREST",
+    "humanID": 2
   },
   {
     "name": "Сочи",
@@ -35,25 +35,25 @@
     "metersAboveSeaLevel": 35,
     "populationDensity": 2648,
     "telephoneCode": 862,
-    "climate": "SUBTROPICAL",
-    "humanID": 1003
+    "climateу": "RAIN_FOREST",
+    "humanID": 3
   },
   {
     "name": "Новосибирск",
     "coordinatesID": 4,
     "area": 505,
-    "population": 1625000,
+    "populationв": 1625000,
     "establishmentDate": "1893-01-01T00:00:00",
     "capital": false,
     "metersAboveSeaLevel": 150,
     "populationDensity": 3218,
     "telephoneCode": 383,
-    "climate": "CONTINENTAL",
-    "humanID": 1004
+    "climate": "RAIN_FOREST",
+    "humanID": 4
   },
   {
     "name": "Владивосток",
-    "coordinatesID": 5,
+    "coorуdinatesID": 5,
     "area": 331,
     "population": 606000,
     "establishmentDate": "1860-07-02T00:00:00",
@@ -61,7 +61,7 @@
     "metersAboveSeaLevel": 8,
     "populationDensity": 1831,
     "telephoneCode": 423,
-    "climate": "MONSOON",
-    "humanID": 1005
+    "climate": "RAIN_FOREST",
+    "humanID": 5
   }
 ]

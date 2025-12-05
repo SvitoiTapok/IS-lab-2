@@ -250,8 +250,8 @@ const MainTable = () => {
         formData.append('file', file);
 
         try {
-            cityService.importCity(formData).then(
-                showNotification((result) => showNotification(result.toString()))
+            cityService.importCity(formData).then((result) =>
+                showNotification(result.toString())
             ).catch((result) => showError(result.toString()))
         } finally {
             setUploading(false);
@@ -377,6 +377,7 @@ const MainTable = () => {
                     type="file"
                     accept=".json,.xml,.csv"
                     onChange={handleFileChange}
+                    className="custom-file-input"
                 />
                 <button onClick={handleUpload} disabled={uploading || !file} className={(uploading||!file)?"create-button-disabled":"create-button"}>
                     {uploading ? 'Загрузка...' : 'Импортировать'}
